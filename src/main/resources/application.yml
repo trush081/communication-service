@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: Communication-Service
+  data:
+    mongodb:
+      uri: ${MONGO_URI}
+
+communication:
+  sendgrid:
+    senders:
+      trentonrush: me@trentonrush.com
+      ukpray: brady@ukpray.com
+    sendgridKey: ${SENDGRID_API_KEY}
+    templates:
+      test: d-81b2bcc6f4804868878e3c3bd0a64080
+
+okta:
+  oauth2:
+    issuer: ${OAUTH_ISSUER}
+    audience: ${OAUTH_AUDIENCE}
