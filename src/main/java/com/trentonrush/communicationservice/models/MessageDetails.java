@@ -5,13 +5,31 @@ import com.trentonrush.communicationservice.models.strapi.Product;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class Fulfillment {
+public class MessageDetails {
+    private String subject;
+    private String content;
     private String orderId;
     private String customerName;
     private String customerEmail;
     private String orderStatus;
     private BigDecimal totalAmount;
     private List<Product> products;
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 
     public String getOrderId() {
         return orderId;
@@ -58,5 +76,18 @@ public class Fulfillment {
 
     public void setProducts(List<Product> products) {
         this.products = products;
+    }
+
+    @Override
+    public String toString() {
+        return "MessageDetails{" +
+                "subject='" + subject + '\'' +
+                ", content='" + content + '\'' +
+                ", orderId='" + orderId + '\'' +
+                ", customerName='" + customerName + '\'' +
+                ", customerEmail='" + customerEmail + '\'' +
+                ", orderStatus='" + orderStatus + '\'' +
+                ", totalAmount=" + totalAmount +
+                '}';
     }
 }

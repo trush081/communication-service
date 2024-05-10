@@ -4,10 +4,9 @@ public class Message {
 
     private String recipient;
     private String template;
-    private String subject;
-    private String content;
     private String sender;
-    private Fulfillment fulfillment;
+    private int responseCode;
+    private MessageDetails messageDetails;
 
     public Message() {
         // empty constructor
@@ -21,12 +20,12 @@ public class Message {
         this.recipient = recipient;
     }
 
-    public Fulfillment getFulfillment() {
-        return fulfillment;
+    public MessageDetails getMessageDetails() {
+        return messageDetails;
     }
 
-    public void setFulfillment(Fulfillment fulfillment) {
-        this.fulfillment = fulfillment;
+    public void setMessageDetails(MessageDetails messageDetails) {
+        this.messageDetails = messageDetails;
     }
 
     public String getSender() {
@@ -37,27 +36,29 @@ public class Message {
         this.sender = sender;
     }
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
-
     public String getTemplate() {
         return template;
     }
 
     public void setTemplate(String template) {
         this.template = template;
+    }
+
+    public int getResponseCode() {
+        return responseCode;
+    }
+
+    public void setResponseCode(int responseCode) {
+        this.responseCode = responseCode;
+    }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "recipient='" + recipient + '\'' +
+                ", template='" + template + '\'' +
+                ", sender='" + sender + '\'' +
+                ", fulfillment=" + messageDetails +
+                '}';
     }
 }

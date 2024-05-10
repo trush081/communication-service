@@ -5,16 +5,24 @@ spring:
     mongodb:
       uri: ${MONGO_URI}
 
+server:
+  servlet:
+    context-path: /communication
+  port: 8080
+
 communication:
   sendgrid:
+    url: https://api.sendgrid.com/v3/mail/send
+    api-key: ${SENDGRID_API_KEY}
+    read-timeout: 5000
+    connect-timeout: 3000
     senders:
       trentonrush: me@trentonrush.com
       ukpray: brady@ukpray.com
-    sendgridKey: ${SENDGRID_API_KEY}
     templates:
-      test: d-81b2bcc6f4804868878e3c3bd0a64080
+      personal: d-81b2bcc6f4804868878e3c3bd0a64080
 
 okta:
   oauth2:
     issuer: ${OAUTH_ISSUER}
-    audience: ${OAUTH_AUDIENCE}
+    audience: https://communication-service.trentonrush.com
