@@ -21,6 +21,12 @@ jobs:
         java-version: '21'
         distribution: 'corretto'
 
+      # Add Doppler CLI action to inject environment variables
+    - name: Install Doppler CLI
+      uses: dopplerhq/cli-action@v1
+      with:
+        doppler-token: ${{ secrets.DOPPLER_TOKEN }}
+
     # Configure Gradle for optimal use in GitHub Actions, including caching of downloaded dependencies.
     # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
     - name: Setup Gradle
