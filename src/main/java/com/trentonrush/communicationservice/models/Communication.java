@@ -1,5 +1,6 @@
 package com.trentonrush.communicationservice.models;
 
+import com.trentonrush.communicationservice.models.dtos.CommunicationDTO;
 import com.trentonrush.communicationservice.models.enums.MessageType;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -16,6 +17,13 @@ public class Communication {
     private LocalDateTime timestamp;
 
     public Communication() {
+        this.timestamp = LocalDateTime.now();
+    }
+
+    public Communication(String source, MessageType messageType, Message message) {
+        this.source = source;
+        this.messageType = messageType;
+        this.message = message;
         this.timestamp = LocalDateTime.now();
     }
 
@@ -47,7 +55,9 @@ public class Communication {
         return message;
     }
 
-
+    public void setMessage(Message message) {
+        this.message = message;
+    }
 
     public LocalDateTime getTimestamp() {
         return timestamp;
@@ -66,5 +76,13 @@ public class Communication {
                 ", message=" + message +
                 ", timestamp=" + timestamp +
                 '}';
+    }
+
+    public static Communication fromDTO(CommunicationDTO dto) {
+        if (dto == null) return null;
+        return new Communication(
+                dto.getSource(),
+                MessageType.fromString(dto.getMessageType()),
+                dto.getMessage());
     }
 }

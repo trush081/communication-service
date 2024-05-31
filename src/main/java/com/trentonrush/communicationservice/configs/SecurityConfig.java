@@ -13,10 +13,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                .securityMatcher("/api/**")
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/private").authenticated()
-                        .requestMatchers("/api/private-scoped").hasAuthority("SCOPE_read:messages")
+                        .requestMatchers("/communication/v1/send").hasAuthority("SCOPE_email:send")
+                        .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwtConfigurer -> {})

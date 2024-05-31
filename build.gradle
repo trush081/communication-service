@@ -16,11 +16,9 @@ repositories {
 }
 
 dependencies {
-    implementation files('build/libs/TrentonRushSDK-1.0-SNAPSHOT.jar')
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'com.sendgrid:sendgrid-java:4.10.1'
     implementation 'com.okta.spring:okta-spring-boot-starter:3.0.6'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
