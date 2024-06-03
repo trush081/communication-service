@@ -43,4 +43,4 @@ jobs:
             docker load -i /home/${{ secrets.DO_DROPLET_USERNAME }}/${{ vars.SERVICE_NAME }}/${{ vars.SERVICE_NAME }}.tar
             docker stop ${{ vars.SERVICE_NAME }} || true
             docker rm ${{ vars.SERVICE_NAME }} || true
-            docker run -d --name ${{ vars.SERVICE_NAME }} -p 80:8080 ${{ vars.SERVICE_NAME }}:latest
+            docker run -d --name ${{ vars.SERVICE_NAME }} -p 80:${{ vars.PORT }} ${{ vars.SERVICE_NAME }}:latest
