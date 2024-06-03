@@ -8,6 +8,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    env:
+      DOCKER_IMAGE: ${{ vars.SERVICE_NAME }}:latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -17,11 +20,11 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build --build-arg DOPPLER_TOKEN=${{ secrets.DOPPLER_TOKEN }} -t ${{ env.SERVICE_NAME }}:latest .
+          docker build --build-arg DOPPLER_TOKEN=${{ secrets.DOPPLER_TOKEN }} -t $DOCKER_IMAGE .
 
       - name: Save Docker image to a file
         run: |
-          docker save ${{ env.SERVICE_NAME }}:latest | gzip > ${{ env.SERVICE_NAME }}.tar.gz
+          docker save $DOCKER_IMAGE | gzip > ${{ env.SERVICE_NAME }}.tar.gz
 
       - name: Copy Docker image to DigitalOcean Droplet
         uses: appleboy/scp-action@master
@@ -43,4 +46,4 @@ jobs:
             docker load -i /${{ secrets.DO_DROPLET_USERNAME }}/${{ env.SERVICE_NAME }}.tar
             docker stop ${{ env.SERVICE_NAME }} || true
             docker rm ${{ env.SERVICE_NAME }} || true
-            docker run -d --name ${{ env.SERVICE_NAME }} -p 80:8080 ${{ env.SERVICE_NAME }}:latest
+            docker run -d --name ${{ env.SERVICE_NAME }} -p 80:8080 $DOCKER_IMAGE
