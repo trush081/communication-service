@@ -24,7 +24,7 @@ jobs:
 
       - name: Save Docker image to a file
         run: |
-          docker save $DOCKER_IMAGE | gzip > ${{ env.SERVICE_NAME }}.tar.gz
+          docker save $DOCKER_IMAGE | gzip > ${{ vars.SERVICE_NAME }}.tar.gz
 
       - name: Copy Docker image to DigitalOcean Droplet
         uses: appleboy/scp-action@master
@@ -32,8 +32,8 @@ jobs:
           host: ${{ secrets.DO_DROPLET_IP }}
           username: ${{ secrets.DO_DROPLET_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: ${{ env.SERVICE_NAME }}.tar.gz
-          target: /${{ secrets.DO_DROPLET_USERNAME }}/${{ env.SERVICE_NAME }}.gz
+          source: ${{ vars.SERVICE_NAME }}.tar.gz
+          target: /${{ secrets.DO_DROPLET_USERNAME }}/${{ vars.SERVICE_NAME }}.gz
 
       - name: SSH and Load Docker image on DigitalOcean
         uses: appleboy/ssh-action@master
@@ -42,8 +42,8 @@ jobs:
           username: ${{ secrets.DO_DROPLET_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            gunzip /${{ secrets.DO_DROPLET_USERNAME }}/${{ env.SERVICE_NAME }}.tar.gz
-            docker load -i /${{ secrets.DO_DROPLET_USERNAME }}/${{ env.SERVICE_NAME }}.tar
-            docker stop ${{ env.SERVICE_NAME }} || true
-            docker rm ${{ env.SERVICE_NAME }} || true
-            docker run -d --name ${{ env.SERVICE_NAME }} -p 80:8080 $DOCKER_IMAGE
+            gunzip /${{ secrets.DO_DROPLET_USERNAME }}/${{ vars.SERVICE_NAME }}.tar.gz
+            docker load -i /${{ secrets.DO_DROPLET_USERNAME }}/${{ vars.SERVICE_NAME }}.tar
+            docker stop ${{ vars.SERVICE_NAME }} || true
+            docker rm ${{ vars.SERVICE_NAME }} || true
+            docker run -d --name ${{ vars.SERVICE_NAME }} -p 80:8080 $DOCKER_IMAGE
