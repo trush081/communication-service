@@ -33,7 +33,7 @@ jobs:
           username: ${{ secrets.DO_DROPLET_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: ${{ vars.SERVICE_NAME }}.tar.gz
-          target: /${{ secrets.DO_DROPLET_USERNAME }}/${{ vars.SERVICE_NAME }}.gz
+          target: /home/${{ secrets.DO_DROPLET_USERNAME }}/${{ vars.SERVICE_NAME }}.tar.gz
 
       - name: SSH and Load Docker image on DigitalOcean
         uses: appleboy/ssh-action@master
@@ -42,8 +42,8 @@ jobs:
           username: ${{ secrets.DO_DROPLET_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            gunzip /${{ secrets.DO_DROPLET_USERNAME }}/${{ vars.SERVICE_NAME }}.tar.gz
-            docker load -i /${{ secrets.DO_DROPLET_USERNAME }}/${{ vars.SERVICE_NAME }}.tar
+            gunzip /home/${{ secrets.DO_DROPLET_USERNAME }}/${{ vars.SERVICE_NAME }}.tar.gz
+            docker load -i /home/${{ secrets.DO_DROPLET_USERNAME }}/${{ vars.SERVICE_NAME }}.tar
             docker stop ${{ vars.SERVICE_NAME }} || true
             docker rm ${{ vars.SERVICE_NAME }} || true
             docker run -d --name ${{ vars.SERVICE_NAME }} -p 80:8080 $DOCKER_IMAGE
