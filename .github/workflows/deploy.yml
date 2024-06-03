@@ -17,11 +17,11 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t communication-service:latest .
+          docker build --build-arg DOPPLER_TOKEN=${{ secrets.DOPPLER_TOKEN }} -t ${{ env.SERVICE_NAME }}:latest .
 
       - name: Save Docker image to a file
         run: |
-          docker save communication-service:latest | gzip > communication-service.tar.gz
+          docker save ${{ env.SERVICE_NAME }}:latest | gzip > ${{ env.SERVICE_NAME }}.tar.gz
 
       - name: Copy Docker image to DigitalOcean Droplet
         uses: appleboy/scp-action@master
@@ -29,8 +29,8 @@ jobs:
           host: ${{ secrets.DO_DROPLET_IP }}
           username: ${{ secrets.DO_DROPLET_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: communication-service.tar.gz
-          target: /${{ secrets.DO_DROPLET_USERNAME }}/communication-service.gz
+          source: ${{ env.SERVICE_NAME }}.tar.gz
+          target: /${{ secrets.DO_DROPLET_USERNAME }}/${{ env.SERVICE_NAME }}.gz
 
       - name: SSH and Load Docker image on DigitalOcean
         uses: appleboy/ssh-action@master
@@ -39,8 +39,8 @@ jobs:
           username: ${{ secrets.DO_DROPLET_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            gunzip /${{ secrets.DO_DROPLET_USERNAME }}/communication-service.tar.gz
-            docker load -i /${{ secrets.DO_DROPLET_USERNAME }}/communication-service.tar
-            docker stop communication-service || true
-            docker rm communication-service || true
-            docker run -d --name communication-service -p 80:8080 communication-service:latest
+            gunzip /${{ secrets.DO_DROPLET_USERNAME }}/${{ env.SERVICE_NAME }}.tar.gz
+            docker load -i /${{ secrets.DO_DROPLET_USERNAME }}/${{ env.SERVICE_NAME }}.tar
+            docker stop ${{ env.SERVICE_NAME }} || true
+            docker rm ${{ env.SERVICE_NAME }} || true
+            docker run -d --name ${{ env.SERVICE_NAME }} -p 80:8080 ${{ env.SERVICE_NAME }}:latest
