@@ -5,6 +5,8 @@ plugins {
 }
 
 group = 'com.trentonrush'
+// Update Dockerfile with new versioning
+// TODO: Long term, find way to automate
 version = '0.0.1-SNAPSHOT'
 
 java {
