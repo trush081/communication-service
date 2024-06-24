@@ -17,7 +17,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build --build-arg DOPPLER_TOKEN=${{ secrets.DOPPLER_TOKEN }} -t ${{ vars.SERVICE_NAME }}:latest .
+          docker build --build-arg DOPPLER_TOKEN=${{ secrets.DOPPLER_TOKEN }} --build-arg SPRING_PROFILES_ACTIVE=${{ vars.ENVIRONMENT }} -t ${{ vars.SERVICE_NAME }}:latest .
 
       - name: Save Docker image to a file
         run: |

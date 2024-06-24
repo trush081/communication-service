@@ -2,12 +2,12 @@ package com.trentonrush.communicationservice.models.dtos;
 
 import com.trentonrush.communicationservice.models.Message;
 
-public class CommunicationDTO {
+public class TransactionalDTO {
     private String source;
     private String messageType;
     private Message message;
 
-    public CommunicationDTO() {
+    public TransactionalDTO() {
         // empty constructor
     }
 

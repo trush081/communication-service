@@ -1,7 +1,9 @@
 package com.trentonrush.communicationservice.models;
 
-import com.trentonrush.communicationservice.models.dtos.CommunicationDTO;
+import com.trentonrush.communicationservice.models.dtos.ContactDTO;
+import com.trentonrush.communicationservice.models.dtos.TransactionalDTO;
 import com.trentonrush.communicationservice.models.enums.MessageType;
+import com.trentonrush.communicationservice.utils.CommunicationConstants;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -12,6 +14,7 @@ public class Communication {
     @Id
     private String id;
     private String source;
+    private String requestType;
     private MessageType messageType;
     private Message message;
     private LocalDateTime timestamp;
@@ -20,8 +23,9 @@ public class Communication {
         this.timestamp = LocalDateTime.now();
     }
 
-    public Communication(String source, MessageType messageType, Message message) {
+    public Communication(String source, String requestType, MessageType messageType, Message message) {
         this.source = source;
+        this.requestType = requestType;
         this.messageType = messageType;
         this.message = message;
         this.timestamp = LocalDateTime.now();
@@ -41,6 +45,14 @@ public class Communication {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public String getRequestType() {
+        return requestType;
+    }
+
+    public void setRequestType(String requestType) {
+        this.requestType = requestType;
     }
 
     public MessageType getMessageType() {
@@ -78,11 +90,21 @@ public class Communication {
                 '}';
     }
 
-    public static Communication fromDTO(CommunicationDTO dto) {
+    public static Communication fromDTO(TransactionalDTO dto) {
         if (dto == null) return null;
         return new Communication(
                 dto.getSource(),
+                CommunicationConstants.TRANSACTIONAL,
                 MessageType.fromString(dto.getMessageType()),
+                dto.getMessage());
+    }
+
+    public static Communication fromDTO(ContactDTO dto) {
+        if (dto == null) return null;
+        return new Communication(
+                dto.getSource(),
+                CommunicationConstants.CONTACT,
+                MessageType.EMAIL,
                 dto.getMessage());
     }
 }

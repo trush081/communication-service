@@ -37,7 +37,7 @@ public class ValidationUtil {
      * Validate an email specific message
      * @param message email type that needs to be validated
      */
-    public static void validateEmail(Message message) {
+    public static void validateEmail(Message message, String emailRequestType) {
         if (Objects.isNull(message)) {
             throw new IllegalArgumentException("Message is null");
         }
@@ -49,6 +49,11 @@ public class ValidationUtil {
         }
         if (Objects.isNull(message.getMessageDetails())) {
             throw new IllegalArgumentException("Message Details is null");
+        }
+        if (emailRequestType.equals(CommunicationConstants.CONTACT)) {
+            validateContent(message.getMessageDetails().getCustomerName());
+            validateContent(message.getMessageDetails().getSubject());
+            validateContent(message.getMessageDetails().getContent());
         }
     }
 
@@ -93,5 +98,13 @@ public class ValidationUtil {
         Pattern compiledPattern = Pattern.compile(pattern);
         Matcher matcher = compiledPattern.matcher(phoneDigits);
         return matcher.matches();
+    }
+
+    public static void validateContent(String content) {
+        // Allow individual characters but disallow dangerous patterns
+        if (content.matches(".*([<>\"'&;]).*") && (content.matches(".*<\\s*(script|/script).*")
+                    || content.matches(".*javascript:.*"))) {
+                throw new IllegalArgumentException("Content contains invalid characters");
+        }
     }
 }

@@ -9,6 +9,9 @@ import org.springframework.context.annotation.Configuration;
 import java.util.EnumMap;
 import java.util.Map;
 
+/**
+ * SendGrid Config
+ */
 @Configuration
 @ConfigurationProperties(prefix = "communication.sendgrid.templates")
 public class SendGridConfig {
