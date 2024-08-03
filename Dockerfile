@@ -15,6 +15,12 @@ RUN curl -sLf --compressed "https://cli.doppler.com/install.sh" | sh
 ARG DOPPLER_TOKEN
 ENV DOPPLER_TOKEN=${DOPPLER_TOKEN}
 
+# Set Up other env variables
+ARG SPRING_PROFILES_ACTIVE
+ENV SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+ARG PERSONAL_EMAIL
+ENV PERSONAL_EMAIL=${PERSONAL_EMAIL}
+
 # Download dependencies and build the application
 RUN doppler run -- gradle build
 
