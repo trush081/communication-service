@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.lang.reflect.Field;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,8 +24,6 @@ import static org.mockito.Mockito.*;
 class EmailHandlerTest {
 
     private SendGridService sendGridService;
-    private CommunicationProperties communicationProperties;
-    private LanguageDetectionService languageDetectionService;
     private CommunicationRepository communicationRepository;
     private EmailHandler emailHandler;
 
@@ -35,8 +32,8 @@ class EmailHandlerTest {
     public void setup() {
         sendGridService = mock(SendGridService.class);
         communicationRepository = mock(CommunicationRepository.class);
-        languageDetectionService = mock(LanguageDetectionService.class);
-        communicationProperties = new TestConfig().communicationProperties();
+        LanguageDetectionService languageDetectionService = mock(LanguageDetectionService.class);
+        CommunicationProperties communicationProperties = new TestConfig().communicationProperties();
         emailHandler = new EmailHandler(communicationProperties, sendGridService, languageDetectionService, communicationRepository);
     }
 
