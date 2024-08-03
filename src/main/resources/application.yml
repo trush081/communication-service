@@ -9,6 +9,8 @@ server:
   servlet:
     context-path: /communication
   port: 8080
+  error:
+    include-message: always
 
 communication:
   sendgrid:
@@ -19,6 +21,8 @@ communication:
     senders:
       trentonrush: me@trentonrush.com
       ukpray: brady@ukpray.com
+    recipients:
+      personal: ${PERSONAL_EMAIL}
     templates:
       personal: d-81b2bcc6f4804868878e3c3bd0a64080
   openAi:

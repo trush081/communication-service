@@ -16,9 +16,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/v1/contact/send") // Disable CSRF for this endpoint
+                )
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/communication/v1/send").hasAuthority("SCOPE_email:send")
-                        .anyRequest().authenticated()
+                        .requestMatchers("/v1/contact/send").permitAll()
+                        .requestMatchers("/v1/transactional/send").hasAuthority("SCOPE_email:send")
+                        .anyRequest().permitAll()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwtConfigurer -> {})

@@ -1,5 +1,6 @@
 package com.trentonrush.communicationservice.utils;
 
+import com.trentonrush.communicationservice.exceptions.InvalidInputException;
 import com.trentonrush.communicationservice.models.Communication;
 import com.trentonrush.communicationservice.models.Message;
 import org.apache.logging.log4j.util.Strings;
@@ -23,13 +24,13 @@ public class ValidationUtil {
      */
     public static void validate(Communication communication) {
         if (Objects.isNull(communication)) {
-            throw new IllegalArgumentException("Communication is null");
+            throw new InvalidInputException("Communication is null");
         }
         if (Strings.isEmpty(communication.getSource())) {
-            throw new IllegalArgumentException("Source is empty");
+            throw new InvalidInputException("Source is empty");
         }
         if (Objects.isNull(communication.getMessageType())) {
-            throw new IllegalArgumentException("MessageType is null");
+            throw new InvalidInputException("MessageType is null");
         }
     }
 
@@ -39,21 +40,25 @@ public class ValidationUtil {
      */
     public static void validateEmail(Message message, String emailRequestType) {
         if (Objects.isNull(message)) {
-            throw new IllegalArgumentException("Message is null");
+            throw new InvalidInputException("Message is null");
         }
         if (Strings.isEmpty(message.getTemplate())) {
-            throw new IllegalArgumentException("Template is empty");
+            throw new InvalidInputException("Template is empty");
         }
-        if (Strings.isEmpty(message.getRecipient()) && isValidEmail(message.getRecipient())) {
-            throw new IllegalArgumentException("Recipient is invalid");
+        if (Strings.isEmpty(message.getRecipient())) {
+            throw new InvalidInputException("Recipient is invalid");
         }
         if (Objects.isNull(message.getMessageDetails())) {
-            throw new IllegalArgumentException("Message Details is null");
+            throw new InvalidInputException("Message Details is null");
         }
         if (emailRequestType.equals(CommunicationConstants.CONTACT)) {
             validateContent(message.getMessageDetails().getCustomerName());
             validateContent(message.getMessageDetails().getSubject());
             validateContent(message.getMessageDetails().getContent());
+        } else {
+            if (!isValidEmail(message.getRecipient())) {
+                throw new InvalidInputException("Recipient contains invalid email");
+            }
         }
     }
 
@@ -76,13 +81,13 @@ public class ValidationUtil {
      */
     public static void validateSMS(Message message) {
         if (Objects.isNull(message)) {
-            throw new IllegalArgumentException("Message is null");
+            throw new InvalidInputException("Message is null");
         }
         if (Strings.isEmpty(message.getTemplate())) {
-            throw new IllegalArgumentException("Template is empty");
+            throw new InvalidInputException("Template is empty");
         }
         if (Strings.isEmpty(message.getRecipient()) && isValidPhoneNumber(message.getRecipient())) {
-            throw new IllegalArgumentException("Recipient is invalid");
+            throw new InvalidInputException("Recipient is invalid");
         }
     }
 
@@ -104,7 +109,7 @@ public class ValidationUtil {
         // Allow individual characters but disallow dangerous patterns
         if (content.matches(".*([<>\"'&;]).*") && (content.matches(".*<\\s*(script|/script).*")
                     || content.matches(".*javascript:.*"))) {
-                throw new IllegalArgumentException("Content contains invalid characters");
+                throw new InvalidInputException("Content contains invalid characters");
         }
     }
 }

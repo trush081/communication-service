@@ -1,6 +1,7 @@
 package com.trentonrush.communicationservice.handlers;
 
 import com.trentonrush.communicationservice.configs.CommunicationProperties;
+import com.trentonrush.communicationservice.exceptions.InvalidInputException;
 import com.trentonrush.communicationservice.models.Communication;
 import com.trentonrush.communicationservice.models.Message;
 import com.trentonrush.communicationservice.models.enums.MessageType;
@@ -24,6 +25,7 @@ public class EmailHandler implements CommunicationHandler {
     private static final Logger logger = LoggerFactory.getLogger(EmailHandler.class);
 
     private final Map<String, String> senders;
+    private final Map<String, String> recipients;
     private final SendGridService sendGridService;
     private final LanguageDetectionService languageDetectionService;
     private final CommunicationRepository communicationRepository;
@@ -33,6 +35,7 @@ public class EmailHandler implements CommunicationHandler {
                         LanguageDetectionService languageDetectionService,
                         CommunicationRepository communicationRepository) {
         this.senders = communicationProperties.getSendgrid().getSenders();
+        this.recipients = communicationProperties.getSendgrid().getRecipients();
         this.sendGridService = sendGridService;
         this.languageDetectionService = languageDetectionService;
         this.communicationRepository = communicationRepository;
@@ -57,8 +60,10 @@ public class EmailHandler implements CommunicationHandler {
         ValidationUtil.validateEmail(communication.getMessage(), communication.getRequestType());
 
         // check contact specific email for inappropriate content
-        if (CommunicationConstants.CONTACT.matches(communication.getRequestType()))
+        if (CommunicationConstants.CONTACT.matches(communication.getRequestType())) {
+            determineContactRecipient(communication.getMessage());
             languageDetectionService.checkLanguage(communication.getMessage().getMessageDetails());
+        }
 
         // Save initial communication
         communicationRepository.save(communication);
@@ -73,8 +78,21 @@ public class EmailHandler implements CommunicationHandler {
     }
 
     /**
+     * Safety net to direct contact email to predefined address
+     * @param message details being sent
+     */
+    private void determineContactRecipient(Message message) {
+        if (!recipients.containsKey(message.getRecipient())) {
+            logger.warn("Contact recipient key {} not found", message.getRecipient());
+            throw new InvalidInputException("Contact recipient key is invalid");
+        }
+        message.setRecipient(recipients.get(message.getRecipient()));
+    }
+
+
+    /**
      * Set the specific sender domain to send a message from
-     * @param message details being set
+     * @param message details being sent
      * @param source where the communication was called
      */
     private void determineSender(Message message, String source) {

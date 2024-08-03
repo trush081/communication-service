@@ -1,5 +1,6 @@
 package com.trentonrush.communicationservice.services;
 
+import com.trentonrush.communicationservice.exceptions.InvalidInputException;
 import com.trentonrush.communicationservice.models.MessageDetails;
 import com.trentonrush.communicationservice.models.openai.CompletionRequest;
 import com.trentonrush.communicationservice.models.openai.CompletionResponse;
@@ -37,7 +38,7 @@ public class LanguageDetectionService {
                 .retrieve()
                 .toEntity(CompletionResponse.class);
         if (containsBadContent(Objects.requireNonNull(response.getBody()))){
-            throw new IllegalArgumentException("Inappropriate content detected in request.");
+            throw new InvalidInputException("Inappropriate content detected in request.");
         }
     }
 

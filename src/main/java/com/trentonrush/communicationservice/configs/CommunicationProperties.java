@@ -24,6 +24,7 @@ public class CommunicationProperties {
         private int readTimeout;
         private int connectTimeout;
         private Map<String, String> senders;
+        private Map<String, String> recipients;
 
         public String getUrl() {
             return url;
@@ -63,6 +64,14 @@ public class CommunicationProperties {
 
         public void setSenders(Map<String, String> senders) {
             this.senders = senders;
+        }
+
+        public Map<String, String> getRecipients() {
+            return recipients;
+        }
+
+        public void setRecipients(Map<String, String> recipients) {
+            this.recipients = recipients;
         }
     }
 
