@@ -1,8 +1,5 @@
 package com.trentonrush.communicationservice.services;
 
-import com.google.gson.JsonObject;
-import com.trentonrush.communicationservice.configs.SendGridConfig;
-import com.trentonrush.communicationservice.models.Message;
 import com.trentonrush.communicationservice.models.MessageDetails;
 import com.trentonrush.communicationservice.models.openai.CompletionRequest;
 import com.trentonrush.communicationservice.models.openai.CompletionResponse;
