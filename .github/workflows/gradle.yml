@@ -35,6 +35,7 @@ jobs:
         run: ./gradlew build
         env:
           SPRING_PROFILES_ACTIVE: ${{ vars.ENVIRONMENT }}
+          PERSONAL_EMAIL: ${{ vars.PERSONAL_EMAIL }}
 
   dependency-submission:
 
