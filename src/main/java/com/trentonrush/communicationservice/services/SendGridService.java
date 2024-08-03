@@ -4,6 +4,7 @@ import com.trentonrush.communicationservice.configs.SendGridConfig;
 import com.trentonrush.communicationservice.models.Message;
 import com.trentonrush.communicationservice.models.sendgrid.SendGridPersonalization;
 import com.trentonrush.communicationservice.models.sendgrid.SendGridRequest;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -16,7 +17,7 @@ public class SendGridService {
     private final SendGridConfig sendGridConfig;
     private final RestClient sendGridRestClient;
 
-    SendGridService(SendGridConfig sendGridConfig, RestClient sendGridRestClient) {
+    SendGridService(SendGridConfig sendGridConfig, @Qualifier("sendGridRestClient") RestClient sendGridRestClient) {
         this.sendGridConfig = sendGridConfig;
         this.sendGridRestClient = sendGridRestClient;
     }
@@ -26,8 +27,7 @@ public class SendGridService {
      * @param message details of what is needed to send an email
      */
     public void sendEmail(Message message) {
-        message.setResponseCode(sendGridRestClient
-                .post()
+        message.setResponseCode(sendGridRestClient.post()
                 .body(new SendGridRequest.Builder()
                         .setFrom(message.getSender())
                         .setTemplateId(sendGridConfig.getSendGridTemplateId(message.getTemplate()))

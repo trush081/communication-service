@@ -1,16 +1,20 @@
 package com.trentonrush.communicationservice.handlers;
 
+import com.trentonrush.communicationservice.configs.CommunicationProperties;
+import com.trentonrush.communicationservice.exceptions.InvalidInputException;
 import com.trentonrush.communicationservice.models.Communication;
 import com.trentonrush.communicationservice.models.Message;
 import com.trentonrush.communicationservice.models.enums.MessageType;
 import com.trentonrush.communicationservice.repositories.CommunicationRepository;
+import com.trentonrush.communicationservice.services.LanguageDetectionService;
 import com.trentonrush.communicationservice.services.SendGridService;
 import com.trentonrush.communicationservice.utils.ValidationUtil;
 import com.trentonrush.communicationservice.utils.CommunicationConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 /**
  * Email Handler
@@ -20,17 +24,20 @@ public class EmailHandler implements CommunicationHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(EmailHandler.class);
 
-    @Value("${communication.sendgrid.senders.trentonrush}")
-    private String trentonrush;
-
-    @Value("${communication.sendgrid.senders.ukpray}")
-    private String ukpray;
-
+    private final Map<String, String> senders;
+    private final Map<String, String> recipients;
     private final SendGridService sendGridService;
+    private final LanguageDetectionService languageDetectionService;
     private final CommunicationRepository communicationRepository;
 
-    public EmailHandler(SendGridService sendGridService, CommunicationRepository communicationRepository) {
+    public EmailHandler(CommunicationProperties communicationProperties,
+                        SendGridService sendGridService,
+                        LanguageDetectionService languageDetectionService,
+                        CommunicationRepository communicationRepository) {
+        this.senders = communicationProperties.getSendgrid().getSenders();
+        this.recipients = communicationProperties.getSendgrid().getRecipients();
         this.sendGridService = sendGridService;
+        this.languageDetectionService = languageDetectionService;
         this.communicationRepository = communicationRepository;
     }
 
@@ -50,7 +57,13 @@ public class EmailHandler implements CommunicationHandler {
     @Override
     public void send(Communication communication) {
         // validate email message
-        ValidationUtil.validateEmail(communication.getMessage());
+        ValidationUtil.validateEmail(communication.getMessage(), communication.getRequestType());
+
+        // check contact specific email for inappropriate content
+        if (CommunicationConstants.CONTACT.matches(communication.getRequestType())) {
+            determineContactRecipient(communication.getMessage());
+            languageDetectionService.checkLanguage(communication.getMessage().getMessageDetails());
+        }
 
         // Save initial communication
         communicationRepository.save(communication);
@@ -65,17 +78,32 @@ public class EmailHandler implements CommunicationHandler {
     }
 
     /**
+     * Safety net to direct contact email to predefined address
+     * @param message details being sent
+     */
+    private void determineContactRecipient(Message message) {
+        if (!recipients.containsKey(message.getRecipient())) {
+            logger.warn("Contact recipient key {} not found", message.getRecipient());
+            throw new InvalidInputException("Contact recipient key is invalid");
+        }
+        message.setRecipient(recipients.get(message.getRecipient()));
+    }
+
+
+    /**
      * Set the specific sender domain to send a message from
-     * @param message details being set
+     * @param message details being sent
      * @param source where the communication was called
      */
     private void determineSender(Message message, String source) {
         switch (source) {
-            case CommunicationConstants.TRENTON_RUSH, CommunicationConstants.GRANITE_SOLUTIONS -> message.setSender(trentonrush);
-            case CommunicationConstants.UK_PRAY -> message.setSender(ukpray);
+            case CommunicationConstants.TRENTON_RUSH, CommunicationConstants.GRANITE_SOLUTIONS ->
+                    message.setSender(senders.get(CommunicationConstants.TRENTON_RUSH));
+            case CommunicationConstants.UK_PRAY ->
+                    message.setSender(senders.get(CommunicationConstants.UK_PRAY));
             default -> {
                 logger.warn("Unrecognized source: {}. Sending from default sender.", source);
-                message.setSender(trentonrush);
+                message.setSender(senders.get(CommunicationConstants.TRENTON_RUSH));
             }
         }
     }

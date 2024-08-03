@@ -9,6 +9,8 @@ server:
   servlet:
     context-path: /communication
   port: 8080
+  error:
+    include-message: always
 
 communication:
   sendgrid:
@@ -19,8 +21,15 @@ communication:
     senders:
       trentonrush: me@trentonrush.com
       ukpray: brady@ukpray.com
+    recipients:
+      personal: ${PERSONAL_EMAIL}
     templates:
       personal: d-81b2bcc6f4804868878e3c3bd0a64080
+  openAi:
+    url: "https://api.openai.com/v1/chat/completions"
+    api-key: ${OPENAI_API_KEY}
+    read-timeout: 5000
+    connect-timeout: 3000
 
 okta:
   oauth2:
