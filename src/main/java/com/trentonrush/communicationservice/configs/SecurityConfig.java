@@ -17,7 +17,6 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/v1/contact/send").permitAll() // Public endpoint
                         .requestMatchers("/v1/transactional/send").hasAuthority("SCOPE_send:transactional-emails") // Backend only
                         .anyRequest().authenticated()
                 )
