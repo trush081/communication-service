@@ -6,8 +6,6 @@ spring:
       uri: ${MONGO_URI}
 
 server:
-  servlet:
-    context-path: /communication
   port: 8080
   error:
     include-message: always
