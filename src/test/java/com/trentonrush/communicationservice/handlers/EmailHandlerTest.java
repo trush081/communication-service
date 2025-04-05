@@ -10,13 +10,10 @@ import com.trentonrush.communicationservice.repositories.CommunicationRepository
 import com.trentonrush.communicationservice.services.LanguageDetectionService;
 import com.trentonrush.communicationservice.services.SendGridService;
 import com.trentonrush.communicationservice.utils.CommunicationConstants;
-import com.trentonrush.communicationservice.utils.TestConstants;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-
-import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;

@@ -2,7 +2,6 @@ package com.trentonrush.communicationservice.configs;
 
 import com.okta.commons.lang.Strings;
 import com.trentonrush.communicationservice.models.enums.TwilioSmsTemplate;
-import com.twilio.Twilio;
 import jakarta.annotation.PostConstruct;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;

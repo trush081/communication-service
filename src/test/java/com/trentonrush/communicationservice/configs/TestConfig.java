@@ -8,6 +8,9 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * I have chosen to only do a portion of the tests
+ */
 @TestConfiguration
 @EnableConfigurationProperties(CommunicationProperties.class)
 public class TestConfig {
@@ -18,7 +21,6 @@ public class TestConfig {
         CommunicationProperties.SendGrid sendGrid = new CommunicationProperties.SendGrid();
         Map<String, String> senders = new HashMap<>();
         senders.put("trentonrush", TestConstants.TRENTONRUSH_TEST_EMAIL);
-        senders.put("ukpray", TestConstants.UKPRAY_TEST_EMAIL);
         sendGrid.setSenders(senders);
         properties.setSendgrid(sendGrid);
         return properties;
