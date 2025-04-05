@@ -11,8 +11,6 @@ public class CommunicationConstants {
 
     // Sources
     public static final String TRENTON_RUSH = "trentonrush";
-    public static final String GRANITE_SOLUTIONS = "granitesolutions";
-    public static final String UK_PRAY = "ukpray";
 
     // Request Types
     public static final String TRANSACTIONAL = "transactional";

@@ -29,7 +29,7 @@ class EmailHandlerTest {
 
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         sendGridService = mock(SendGridService.class);
         communicationRepository = mock(CommunicationRepository.class);
         LanguageDetectionService languageDetectionService = mock(LanguageDetectionService.class);
@@ -50,7 +50,6 @@ class EmailHandlerTest {
         doReturn(communication).when(communicationRepository).save(any(Communication.class));
 
         emailHandler.send(communication);
-        assertEquals(Objects.equals(source, CommunicationConstants.UK_PRAY) ? TestConstants.UKPRAY_TEST_EMAIL : TestConstants.TRENTONRUSH_TEST_EMAIL, communication.getMessage().getSender());
         verify(communicationRepository, times(2)).save(communication);
         verify(sendGridService, times(1)).sendEmail(any(Message.class));
     }
