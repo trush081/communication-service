@@ -18,11 +18,19 @@ communication:
     connect-timeout: 3000
     senders:
       trentonrush: me@trentonrush.com
-      ukpray: brady@ukpray.com
-    recipients:
-      personal: ${PERSONAL_EMAIL}
+    recipients: # set specific recipients for a template
+      personal: ${CONTACT_EMAIL_GROUP}
     templates:
       personal: d-81b2bcc6f4804868878e3c3bd0a64080
+  twilio:
+    account-sid: ${TWILIO_SID}
+    messaging-service-sid: ${TWILIO_MESSAGING_SERVICE_SID}
+    auth-token: ${TWILIO_AUTH_TOKEN}
+    senders:
+      trentonrush: +12345678910
+    templates: # Content SIDs
+      personal: HX7139cf7ff4239e7f96604f3baba49498
+
   openAi:
     url: "https://api.openai.com/v1/chat/completions"
     api-key: ${OPENAI_API_KEY}

@@ -13,6 +13,7 @@ import java.util.Map;
 public class CommunicationProperties {
 
     private SendGrid sendgrid;
+    private Twilio twilio;
     private OpenAi openAi;
 
     /**
@@ -76,6 +77,57 @@ public class CommunicationProperties {
     }
 
     /**
+     * Twilio Properties
+     */
+    public static class Twilio {
+        private String url;
+        private String authToken;
+        private String accountSid;
+        private String messagingServiceSid;
+        private Map<String, String> senders;
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public Map<String, String> getSenders() {
+            return senders;
+        }
+
+        public void setSenders(Map<String, String> senders) {
+            this.senders = senders;
+        }
+
+        public String getAccountSid() {
+            return accountSid;
+        }
+
+        public void setAccountSid(String accountSid) {
+            this.accountSid = accountSid;
+        }
+
+        public String getMessagingServiceSid() {
+            return messagingServiceSid;
+        }
+
+        public void setMessagingServiceSid(String messagingServiceSid) {
+            this.messagingServiceSid = messagingServiceSid;
+        }
+
+        public String getAuthToken() {
+            return authToken;
+        }
+
+        public void setAuthToken(String authToken) {
+            this.authToken = authToken;
+        }
+    }
+
+    /**
      * Open AI Properties
      */
     public static class OpenAi {
@@ -123,6 +175,14 @@ public class CommunicationProperties {
 
     public void setSendgrid(SendGrid sendgrid) {
         this.sendgrid = sendgrid;
+    }
+
+    public Twilio getTwilio() {
+        return twilio;
+    }
+
+    public void setTwilio(Twilio twilio) {
+        this.twilio = twilio;
     }
 
     public OpenAi getOpenAi() {

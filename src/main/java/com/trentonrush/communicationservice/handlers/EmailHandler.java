@@ -91,20 +91,17 @@ public class EmailHandler implements CommunicationHandler {
 
 
     /**
-     * Set the specific sender domain to send a message from
+     * Determine what sender will be used based on the source given
+     * can be expanded to more than one sender
      * @param message details being sent
      * @param source where the communication was called
      */
     private void determineSender(Message message, String source) {
-        switch (source) {
-            case CommunicationConstants.TRENTON_RUSH, CommunicationConstants.GRANITE_SOLUTIONS ->
-                    message.setSender(senders.get(CommunicationConstants.TRENTON_RUSH));
-            case CommunicationConstants.UK_PRAY ->
-                    message.setSender(senders.get(CommunicationConstants.UK_PRAY));
-            default -> {
-                logger.warn("Unrecognized source: {}. Sending from default sender.", source);
-                message.setSender(senders.get(CommunicationConstants.TRENTON_RUSH));
-            }
+        if (source.equals(CommunicationConstants.TRENTON_RUSH)) {
+            message.setSender(senders.get(CommunicationConstants.TRENTON_RUSH));
+        } else {
+            logger.warn("Unrecognized source: {}. Sending from default sender.", source);
+            message.setSender(senders.get(CommunicationConstants.TRENTON_RUSH));
         }
     }
 }
